@@ -24,3 +24,6 @@ deactivate
 
 rm -rf venv
 ```
+
+# Результаты
+![](results/best.jpg)
