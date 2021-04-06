@@ -73,6 +73,8 @@ matplotlib==3.2.2
 ```
 
 # Results
+1 style and 1 content
 ![](results/best.jpg)
 
+2 styles and 1 content
 ![](results/best_2.jpg)
