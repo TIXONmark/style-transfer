@@ -360,7 +360,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--image_max_dim_size",
         type=int,
-        default=512,
+        default=1024,
         help="Max dimension size for image",
     )
     parser.add_argument(
