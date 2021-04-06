@@ -10,8 +10,10 @@ from tensorflow.python.keras import layers
 from tensorflow.python.keras import losses
 from tensorflow.python.keras.preprocessing import image as keras_image
 
+
 class ImagesProcessing:
     """Functions for images processing"""
+
     @staticmethod
     def get_image(image_path: str, args: dict) -> np.ndarray:
         """Get image from file"""
@@ -63,8 +65,10 @@ class ImagesProcessing:
         img = np.clip(img, 0, 255).astype("uint8")
         return img
 
+
 class Losses:
     """Functions for computing losses"""
+
     @staticmethod
     def get_content_loss(base_content, target):
         """Content loss"""
@@ -81,7 +85,7 @@ class Losses:
         # Gram matrix
         gram = tf.matmul(a, a, transpose_a=True)
         return gram / tf.cast(n, tf.float32)
-        
+
     @staticmethod
     def get_style_loss(base_style, gram_target, args: dict):
         """Style loss"""
@@ -113,15 +117,20 @@ class Losses:
 
 class Models:
     """Functions for getting models"""
+
     @staticmethod
     def get_model(args: dict):
         """Get VGG19 model"""
         # Load VGG19 model
-        vgg_model = tf.keras.applications.vgg19.VGG19(include_top=False, weights="imagenet")
+        vgg_model = tf.keras.applications.vgg19.VGG19(
+            include_top=False, weights="imagenet"
+        )
         vgg_model.trainable = False
 
         # Get outputs of model
-        style_outputs = [vgg_model.get_layer(name).output for name in args["style_layers"]]
+        style_outputs = [
+            vgg_model.get_layer(name).output for name in args["style_layers"]
+        ]
         content_outputs = [
             vgg_model.get_layer(name).output for name in args["content_layers"]
         ]
@@ -134,12 +143,17 @@ class Models:
 
 class Features:
     """Functions for getting features"""
+
     @staticmethod
     def get_feature_representations(model, args: dict) -> (list, list):
         """Get feature representations for all images"""
         # Load content and style images
-        content_images = ImagesProcessing.load_and_process_images_for_model(args["content_paths"], args)
-        style_images = ImagesProcessing.load_and_process_images_for_model(args["style_paths"], args)
+        content_images = ImagesProcessing.load_and_process_images_for_model(
+            args["content_paths"], args
+        )
+        style_images = ImagesProcessing.load_and_process_images_for_model(
+            args["style_paths"], args
+        )
 
         # Compute content and style outputs
         styles_outputs = []
@@ -151,7 +165,10 @@ class Features:
 
         # Get 0 because of 1 image in batch (1 output)
         styles_features = [
-            [style_layer[0] for style_layer in style_outputs[: len(args["style_layers"])]]
+            [
+                style_layer[0]
+                for style_layer in style_outputs[: len(args["style_layers"])]
+            ]
             for style_outputs in styles_outputs
         ]
         contents_features = [
@@ -197,7 +214,9 @@ class Computing:
             weight_per_style_layer = 1.0 / float(
                 len(args["style_layers"]) * len(args["content_paths"])
             )
-            for target_style, comb_style in zip(gram_style_features, style_output_features):
+            for target_style, comb_style in zip(
+                gram_style_features, style_output_features
+            ):
                 style_score += weight_per_style_layer * Losses.get_style_loss(
                     comb_style[0], target_style, args
                 )
@@ -250,7 +269,9 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
         layer.trainable = False
 
     # Get features representations for styles and contents images
-    styles_features, contents_features = Features.get_feature_representations(model, args)
+    styles_features, contents_features = Features.get_feature_representations(
+        model, args
+    )
 
     # Get Gram's matrix of features
     gram_styles_features = [
@@ -329,7 +350,9 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
         if i % args["display_interval"] == 0:
             if args["save_during_training"]:
                 img_checkpoint = init_image.numpy()
-                img_checkpoint = ImagesProcessing.process_image_for_saving(img_checkpoint)
+                img_checkpoint = ImagesProcessing.process_image_for_saving(
+                    img_checkpoint
+                )
                 Image.fromarray(img_checkpoint).save(
                     os.path.join(
                         args["saving_folder"],
@@ -402,7 +425,10 @@ if __name__ == "__main__":
         "--best_image_name", type=str, default="best.jpg", help="Best image saving name"
     )
     parser.add_argument(
-        "--best_image_saving_folder", type=str, default="results", help="Best image saving folder"
+        "--best_image_saving_folder",
+        type=str,
+        default="results",
+        help="Best image saving folder",
     )
     parser.add_argument("--denoise_shape", type=int, default=2, help="Denoise shape")
     parser.add_argument(
@@ -445,4 +471,6 @@ if __name__ == "__main__":
     args = parser.parse_args().__dict__
     best_img, best_loss = run_style_transfer(args)
     best_img = Image.fromarray(best_img)
-    best_img.save(os.path.join(args["best_image_saving_folder"], args["best_image_name"]))
+    best_img.save(
+        os.path.join(args["best_image_saving_folder"], args["best_image_name"])
+    )

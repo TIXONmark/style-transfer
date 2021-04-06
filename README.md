@@ -88,6 +88,7 @@ type=str, nargs="+", default=["images/style_image.jpg"], help="Style images path
 content_layers
 ```
 type=str, nargs="+", default=["block5_conv2"], help="Content layers"
+```
 style_layers
 ```
 type=str, nargs="+", 
