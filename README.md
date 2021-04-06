@@ -61,7 +61,7 @@ Use VGG19 model and optimize content, style and denoise loss by changing source 
 # Features
 - [x] Using multiple images
 - [x] Smoothing
-- [ ] Make image from noise
+- [x] Make image from noise
 - [ ] Video processing
 
 # Requirements
