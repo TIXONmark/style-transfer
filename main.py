@@ -1,8 +1,16 @@
+# Library for working with images
 from PIL import Image
+
+# Computations
 import numpy as np
+
+# Time
 import time
+
+# System
 import os
 
+# Machine learning library
 import tensorflow as tf
 from tensorflow.python.keras import backend as K
 from tensorflow.python.keras import models
@@ -379,48 +387,11 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
 
 
 if __name__ == "__main__":
+    # Import argparse for getting arguments
     import argparse
 
+    # Get arguments
     parser = argparse.ArgumentParser(description="Style transfer")
-    parser.add_argument(
-        "--display_interval", type=int, default=10, help="Display interval"
-    )
-    parser.add_argument(
-        "--image_max_dim_size",
-        type=int,
-        default=1024,
-        help="Max dimension size for image",
-    )
-    parser.add_argument(
-        "--num_iterations", type=int, default=1000, help="Num iterations"
-    )
-    parser.add_argument("--style_weight", type=float, default=7e12, help="Style weight")
-    parser.add_argument(
-        "--content_weight", type=float, default=1e4, help="Content weight"
-    )
-    parser.add_argument(
-        "--denoise_weight", type=float, default=1e0, help="Denoise weight"
-    )
-    parser.add_argument(
-        "--learning_rate", type=float, default=1.1, help="Learning rate"
-    )
-    parser.add_argument("--beta_1", type=float, default=0.9, help="Beta 1")
-    parser.add_argument("--epsilon", type=float, default=2e-2, help="Epsilon")
-    parser.add_argument(
-        "--use_style_norm",
-        type=bool,
-        default=True,
-        help="Should we divide style loss by 4.0 * (channels ** 2) * (width * height) ** 2",
-    )
-    parser.add_argument(
-        "--save_during_training",
-        type=bool,
-        default=True,
-        help="Save images during training",
-    )
-    parser.add_argument(
-        "--saving_folder", type=str, default="results", help="Folder for saving images"
-    )
     parser.add_argument(
         "--best_image_name", type=str, default="best.jpg", help="Best image saving name"
     )
@@ -430,9 +401,13 @@ if __name__ == "__main__":
         default="results",
         help="Best image saving folder",
     )
-    parser.add_argument("--denoise_shape", type=int, default=2, help="Denoise shape")
+    parser.add_argument("--beta_1", type=float, default=0.9, help="Beta 1")
     parser.add_argument(
-        "--use_first_image", type=bool, default=True, help="Use first image as init"
+        "--content_layers",
+        type=str,
+        nargs="+",
+        default=["block5_conv2"],
+        help="Content layers",
     )
     parser.add_argument(
         "--content_paths",
@@ -442,18 +417,36 @@ if __name__ == "__main__":
         help="Content images paths",
     )
     parser.add_argument(
-        "--style_paths",
-        type=str,
-        nargs="+",
-        default=["images/style_image.jpg"],
-        help="Style images paths",
+        "--content_weight", type=float, default=1e4, help="Content weight"
+    )
+    parser.add_argument("--denoise_shape", type=int, default=2, help="Denoise shape")
+    parser.add_argument(
+        "--denoise_weight", type=float, default=1e0, help="Denoise weight"
     )
     parser.add_argument(
-        "--content_layers",
-        type=str,
-        nargs="+",
-        default=["block5_conv2"],
-        help="Content layers",
+        "--display_interval", type=int, default=10, help="Display interval"
+    )
+    parser.add_argument("--epsilon", type=float, default=2e-2, help="Epsilon")
+    parser.add_argument(
+        "--image_max_dim_size",
+        type=int,
+        default=1024,
+        help="Max dimension size for image",
+    )
+    parser.add_argument(
+        "--learning_rate", type=float, default=1.1, help="Learning rate"
+    )
+    parser.add_argument(
+        "--num_iterations", type=int, default=1000, help="Num iterations"
+    )
+    parser.add_argument(
+        "--save_during_training",
+        type=bool,
+        default=True,
+        help="Save images during training",
+    )
+    parser.add_argument(
+        "--saving_folder", type=str, default="results", help="Folder for saving images"
     )
     parser.add_argument(
         "--style_layers",
@@ -468,9 +461,41 @@ if __name__ == "__main__":
         ],
         help="Style layers",
     )
+    parser.add_argument(
+        "--style_paths",
+        type=str,
+        nargs="+",
+        default=["images/style_image.jpg"],
+        help="Style images paths",
+    )
+    parser.add_argument("--style_weight", type=float, default=7e12, help="Style weight")
+    parser.add_argument(
+        "--use_first_image", type=bool, default=True, help="Use first image as init"
+    )
+    parser.add_argument(
+        "--use_style_norm",
+        type=bool,
+        default=True,
+        help="Should we divide style loss by 4.0 * (channels ** 2) * (width * height) ** 2",
+    )
+
+    # Arguments as dict
     args = parser.parse_args().__dict__
+
+    # Make saving folder for temp images and saving folder for the best image
+    if not os.path.exists(args["saving_folder"]):
+        os.mkdir(args["saving_folder"])
+    if args["save_during_training"]:
+        if not os.path.exists(args["best_image_saving_folder"]):
+            os.mkdir(args["best_image_saving_folder"])
+
+    # Run style transfer
     best_img, best_loss = run_style_transfer(args)
+
+    # Get best image
     best_img = Image.fromarray(best_img)
+
+    # Save best image
     best_img.save(
         os.path.join(args["best_image_saving_folder"], args["best_image_name"])
     )
