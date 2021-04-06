@@ -13,6 +13,7 @@ rm -rf venv
 ```
 
 # Options
+```
 "--display_interval", type=int, default=10, help="Display interval"
 
 "--image_max_dim_size",
@@ -83,6 +84,7 @@ rm -rf venv
             "block5_conv1",
         ],
         help="Style layers"
+```
 
 # Results
 ![](results/best.jpg)
