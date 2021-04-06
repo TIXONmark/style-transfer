@@ -218,10 +218,14 @@ class Computing:
         denoise_score = 0
 
         # Get scores for style features
-        for gram_style_features in gram_styles_features:
+        if len(args["style_layers"]) * len(args["content_paths"]) != 0:
             weight_per_style_layer = 1.0 / float(
                 len(args["style_layers"]) * len(args["content_paths"])
             )
+        else:
+            weight_per_style_layer = 1.0
+
+        for gram_style_features in gram_styles_features:
             for target_style, comb_style in zip(
                 gram_style_features, style_output_features
             ):
@@ -230,10 +234,14 @@ class Computing:
                 )
 
         # Get scores for content features
-        for content_features in contents_features:
+        if len(args["content_layers"]) * len(args["style_paths"]) != 0:
             weight_per_content_layer = 1.0 / float(
                 len(args["content_layers"]) * len(args["style_paths"])
             )
+        else:
+            weight_per_content_layer = 1.0
+
+        for content_features in contents_features:
             for target_content, comb_content in zip(
                 content_features, content_output_features
             ):
@@ -412,7 +420,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--content_paths",
         type=str,
-        nargs="+",
+        nargs="*",
         default=["images/content_image.jpg"],
         help="Content images paths",
     )
@@ -464,7 +472,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--style_paths",
         type=str,
-        nargs="+",
+        nargs="*",
         default=["images/style_image.jpg"],
         help="Style images paths",
     )
