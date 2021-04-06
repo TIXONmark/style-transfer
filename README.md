@@ -14,27 +14,27 @@ rm -rf venv
 
 # Options
 ```
-python main.py --best_image_name=best.jpg \ # Best image saving name
-               --best_image_saving_folder=results \ # Best image saving folder
-               --beta_1=0.9 \ # Beta 1
-               --content_layers=["block5_conv2"] \ # Content layers
-               --content_paths=["images/content_image.jpg"] \ # Content images paths
-               --content_weight=1e4 \ # Content weight
-               --denoise_shape=2 \ # Denoise shape
-               --denoise_weight=1e0 \ # Denoise weight
-               --display_interval=10 \ # Display interval
-               --epsilon=2e-2 \ # Epsilon
-               --image_max_dim_size=1024 \ # Max dimension size for image (it is worth using a power of two)
-               --learning_rate=1.1 \ # Learning rate
-               --num_iterations=1000 \ # Num iterations
-               --save_during_training=True \ # Save images during training
-               --saving_folder=results \ # Folder for saving images
+python main.py --best_image_name=best.jpg \
+               --best_image_saving_folder=results \
+               --beta_1=0.9 \ `Beta 1` \
+               --content_layers=["block5_conv2"] \
+               --content_paths=["images/content_image.jpg"] \
+               --content_weight=1e4 \
+               --denoise_shape=2 \
+               --denoise_weight=1e0 \
+               --display_interval=10 \
+               --epsilon=2e-2 \
+               --image_max_dim_size=1024 \
+               --learning_rate=1.1 \
+               --num_iterations=1000 \
+               --save_during_training=True \
+               --saving_folder=results \
                --style_layers=["block1_conv1","block2_conv1","block3_conv1", \ 
-                               "block4_conv1","block5_conv1"] \ # Style layers
-               --style_paths=["images/style_image.jpg"] \ # Style images paths
-               --style_weight=7e12 \ # Style weight
-               --use_first_image=True \ # Use first image as init
-               --use_style_norm=True \ # Should we divide style loss by 4.0 * (channels ** 2) * (width * height) ** 2
+                               "block4_conv1","block5_conv1"] \
+               --style_paths=["images/style_image.jpg"] \
+               --style_weight=7e12 \
+               --use_first_image=True \
+               --use_style_norm=True
 ```
 
 # How it works
