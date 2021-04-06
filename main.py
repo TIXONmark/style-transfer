@@ -227,17 +227,17 @@ class Computing:
         return loss, style_score, content_score, denoise_score
 
     @staticmethod
-    def compute_grads(cfg: dict, args: dict):
+    def compute_grads(training_params: dict, args: dict):
         """Compute gradients"""
         # Compute loss using tensorflow
         with tf.GradientTape() as tape:
-            all_loss = Computing.compute_loss(args, **cfg)
+            all_loss = Computing.compute_loss(args, **training_params)
 
         # Get total loss
         total_loss = all_loss[0]
 
         # Return gradient and all losses (with total)
-        return tape.gradient(total_loss, cfg["init_image"]), all_loss
+        return tape.gradient(total_loss, training_params["init_image"]), all_loss
 
 
 def run_style_transfer(args: dict) -> (np.ndarray, float):
@@ -286,7 +286,7 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
         args["content_weight"],
         args["denoise_weight"],
     )
-    cfg = {
+    training_params = {
         "model": model,
         "loss_weights": loss_weights,
         "init_image": init_image,
@@ -304,8 +304,11 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
 
     # Iterations loop
     for i in range(args["num_iterations"]):
+        # Iteration start time
+        iteration_start_time = time.time()
+
         # Compute gradients
-        grads, all_loss = Computing.compute_grads(cfg, args)
+        grads, all_loss = Computing.compute_grads(training_params, args)
 
         # Get losses
         loss, style_score, content_score, denoise_score = all_loss
@@ -339,11 +342,13 @@ def run_style_transfer(args: dict) -> (np.ndarray, float):
                 "style loss: {:.4e}, "
                 "content loss: {:.4e}, "
                 "denoise loss: {:.4e}, "
+                "iteration time: {:.4f}s, "
                 "time: {:.4f}s".format(
                     loss,
                     style_score,
                     content_score,
                     denoise_score,
+                    time.time() - iteration_start_time,
                     time.time() - start_time,
                 )
             )
@@ -397,7 +402,7 @@ if __name__ == "__main__":
         "--best_image_name", type=str, default="best.jpg", help="Best image saving name"
     )
     parser.add_argument(
-        "--best_image_saving_folder", type=str, default="results", help="Best image saving name"
+        "--best_image_saving_folder", type=str, default="results", help="Best image saving folder"
     )
     parser.add_argument("--denoise_shape", type=int, default=2, help="Denoise shape")
     parser.add_argument(
