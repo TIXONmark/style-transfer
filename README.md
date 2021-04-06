@@ -14,27 +14,26 @@ rm -rf venv
 
 # Options
 ```
-python main.py --best_image_name=best.jpg \
-               --best_image_saving_folder=results \
-               --beta_1=0.9 \ `Beta 1` \
-               --content_layers=["block5_conv2"] \
-               --content_paths=["images/content_image.jpg"] \
-               --content_weight=1e4 \
-               --denoise_shape=2 \
-               --denoise_weight=1e0 \
-               --display_interval=10 \
-               --epsilon=2e-2 \
-               --image_max_dim_size=1024 \
-               --learning_rate=1.1 \
-               --num_iterations=1000 \
-               --save_during_training=True \
-               --saving_folder=results \
-               --style_layers=["block1_conv1","block2_conv1","block3_conv1", \ 
-                               "block4_conv1","block5_conv1"] \
-               --style_paths=["images/style_image.jpg"] \
-               --style_weight=7e12 \
-               --use_first_image=True \
-               --use_style_norm=True
+python main.py --best_image_name best.jpg \
+               --best_image_saving_folder results \
+               --beta_1 0.9 \
+               --content_layers block5_conv2 \
+               --content_paths images/content_image.jpg \
+               --content_weight 1e4 \
+               --denoise_shape 2 \
+               --denoise_weight 1e0 \
+               --display_interval 10 \
+               --epsilon 2e-2 \
+               --image_max_dim_size 1024 \
+               --learning_rate 1.1 \
+               --num_iterations 1000 \
+               --save_during_training True \
+               --saving_folder results \
+               --style_layers block1_conv1 block2_conv1 block3_conv1 block4_conv1 block5_conv1 \
+               --style_paths images/style_image.jpg \
+               --style_weight 7e12 \
+               --use_first_image True \
+               --use_style_norm True
 ```
 
 # How it works
