@@ -74,3 +74,5 @@ matplotlib==3.2.2
 
 # Results
 ![](results/best.jpg)
+
+![](results/best_2.jpg)
